@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 #load session states
-#line is a list, point data is an array of dataframes
+#line is a list, point data is a dataframe
 def load_session_states(ss):
     #if an oponent name has been added start collecting stats
     if 'opponent_name' in ss:

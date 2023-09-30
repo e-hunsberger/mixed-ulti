@@ -72,6 +72,7 @@ else:
         else:
             point_data = point_data.append(pd.Series(new_row, index=col_names), ignore_index=True)
         #replace False with true for the player selected
+        st.markdown(point_data.iloc[len(point_data)-1,:][player] )
         point_data.iloc[len(point_data)-1,:][player] = True
         st.dataframe(point_data)
 
