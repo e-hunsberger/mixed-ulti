@@ -21,6 +21,11 @@ def load_session_states(ss):
     else:
         first_point_gender = None
 
+    if 'first_point_line_type' in ss:
+        first_point_line_type = ss.first_point_line_type
+    else:
+        first_point_line_type = None
+
     if 'line' in ss:
         line = ss.line
     else:
@@ -31,9 +36,46 @@ def load_session_states(ss):
     else:
         point_data = None
 
-    
-    
-    return opponent_name, team_df, first_point_gender, line, point_data
+    if 'us_score' in ss:
+            us_score = ss.us_score
+    else:
+        us_score = 0 
+
+    #int of opposition score
+    if 'them_score' in ss:
+            them_score = ss.them_score
+    else:
+        them_score = 0 
+
+    #gender match of point (char 'F'/'M')
+    if 'point_gender' in ss:
+        point_gender = ss.point_gender
+    elif first_point_gender is not None:
+        point_gender = first_point_gender 
+    #initialise with F but will switch later based on user selection
+    else: 
+        point_gender = 'F'
+         
+
+    #line type of point (char 'O'/'D')
+    if 'line_type' in ss:
+            line_type = ss.line_type
+    elif first_point_line_type is not None:
+        line_type = first_point_line_type
+    #initialise with O, but will switch later based on user selection
+    else:
+        line_type = 'O' 
+
+    #keep track of whether on O or D on the current point
+    if 'current_O_D' in ss:
+        current_O_D = ss.current_O_D
+    elif line_type == 'O':
+        current_O_D = 'O'
+    elif line_type == 'D':
+        current_O_D = 'D'
+    else:
+        current_O_D = None
+    return opponent_name, team_df, first_point_gender, first_point_line_type, line, point_data, us_score, them_score, point_gender, line_type, current_O_D
 
 #create default euphoria roster
 def make_euphoria_roster():
@@ -74,13 +116,13 @@ def make_euphoria_roster():
     return euphoria_roster 
 
 #save session states
-def save_session_states(first_point_gender,first_point_line,score_us,score_them):
+def save_session_states(first_point_gender,first_point_line_type,score_us,score_them,line_type):
 
-    if first_point_gender not in st.session_state:
-        st.session_state.first_point_gender = first_point_gender
-    
-    if first_point_line not in st.session_state:
-        st.session_state.first_point_line = first_point_line
+    st.session_state.first_point_gender = first_point_gender
+    st.session_state.first_point_line_type = first_point_line_type
+    st.session_state.score_us = score_us
+    st.session_state.score_them = score_them
+    st.session_state.line_type = line_type
 
 
 
@@ -92,7 +134,8 @@ def get_gender_of_point(first_point_gender,score):
     if first_point_gender == 'F':
         #create dict of gender for each total score
         score_gender_dict = {
-            0:'F',1:'M',2:'F',3:'F',4:'M'
+            0:'F',1:'M',2:'F',3:'F',4:'M',5:'M',6:'F',7:'F',8:'M',9:'M',10:'F',11:'F',12:'M',13:'M',14:'F',15:'F',
+            16:'M',17:'M',18:'F',19:'F',20:'M',21:'M',22:'F',23:'F',24:'M',25:'M',26:'F',27:'F',28:'M',29:'M',30:'F'
         }
     
     else:
@@ -103,6 +146,11 @@ def get_gender_of_point(first_point_gender,score):
     point_gender = score_gender_dict[score] 
 
     return point_gender
+
+#get whether the point is O or D
+# def get_line_type_of_point(first_point_line_type,score):
+    #if first point line type is F 
+
 
 
 def set_point_info(us_score,them_score,point_gender,line_type):

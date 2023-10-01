@@ -7,7 +7,7 @@ st.set_page_config(
     page_icon="🤝")
 st.markdown("Make team page")
 
-opponent_name, team_df, first_point_gender, line, point_data = load_session_states(st.session_state)
+opponent_name, team_df, first_point_gender, first_point_line_type, line, point_data, us_score, them_score, point_gender, line_type, current_O_D = load_session_states(st.session_state)
 load_euphoria_roster = st.toggle("load euphoria roster?",True)
 
 if (team_df is None or len(team_df) == 0) and (load_euphoria_roster == False):

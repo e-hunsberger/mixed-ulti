@@ -5,11 +5,7 @@ st.set_page_config(
     page_title="Set Line",
     page_icon="📋")
 
-opponent_name, team_df, first_point_gender, line, point_data = load_session_states(st.session_state)
-
-#set score on sidebar
-#score, gender, offense/defense (us_score,them_score,first_point_gender,line_type)
-set_point_info(0,0,'F','O')
+opponent_name, team_df, first_point_gender, first_point_line_type, line, point_data, us_score, them_score, point_gender, line_type, current_O_D = load_session_states(st.session_state)
 
 
 if team_df is None:
@@ -23,15 +19,16 @@ else:
     #game start stats
     st.markdown('Game-start stats:')
     first_point_gender = st.radio('Gender of first point:',['F','M'],horizontal = True)
-    first_point_line = st.radio('First point:',['O','D'], horizontal = True)
+    first_point_line_type = st.radio('First point:',['O','D'], horizontal = True)
     score_us = 0
     score_them = 0
 
+
     #save game start stats as session state
-    save_session_states(first_point_gender,first_point_line,score_us,score_them)
+    save_session_states(first_point_gender,first_point_line_type,score_us,score_them,line_type)
 
     #temp:
-    line_type = 'O'
+
     score = 0
 
     point_gender = get_gender_of_point(first_point_gender,score)
