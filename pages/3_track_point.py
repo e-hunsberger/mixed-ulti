@@ -7,7 +7,7 @@ st.set_page_config(
 )
 
 # Load session states
-opponent_name, team_df, first_point_gender, first_point_line_type, line, point_data, us_score, them_score, point_gender, line_type, current_O_D = load_session_states(st.session_state)
+opponent_name, team_df, first_point_gender, first_point_line_type, line, point_data, us_score, them_score, point_gender, line_type, current_O_D, all_points = load_session_states(st.session_state)
 
 #set score on sidebar
 #score, gender, offense/defense (us_score,them_score,point_gender,line_type)
@@ -51,9 +51,11 @@ else:
 
         #if action was 'throwaway' or 'turn' switch from offensive actions to defensive actions
         if (selected_action == 'turn') or (selected_action == 'throwaway'):
-            current_O_D = 'D'
+            st.session_state.current_O_D = 'D'
+            st.rerun()
         if (selected_action == "generate turn") or (selected_action == "handblock/footblock"):
-            corrent_O_D = 'O'
+            st.session_state.current_O_D = 'O'
+            st.rerun()
     
 
 
@@ -64,6 +66,7 @@ else:
     if st.button('Undo'):
         point_data = point_data[0:len(point_data)-1]
         st.session_state.point_data = point_data
+        st.rerun()
 
 
     #save data
@@ -88,3 +91,18 @@ else:
         st.session_state.point_gender = point_gender
         #rerun immediately so score and gender update
         st.rerun()
+
+    #when ready, save the point (point will be saved as a dataframe concantenated with all points df)
+    #add extra columns for the opponent name, offensive vs defensive point, gender, us score, them score
+    if st.sidebar.button('submit point:'):
+        point_data['opponent'] = opponent_name
+        point_data['line_type'] = line_type
+        point_data['point_gender'] = point_gender
+        point_data['us_score'] = us_score
+        point_data['them_score'] = them_score
+        point_data['score'] = us_score + them_score
+
+        all_points = pd.concat([all_points,point_data])
+        st.session_state.all_points = all_points
+
+        #try melting/pivoting to have names become a column called name, then groupby name and other attributes

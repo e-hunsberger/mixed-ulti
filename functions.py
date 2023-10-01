@@ -75,7 +75,13 @@ def load_session_states(ss):
         current_O_D = 'D'
     else:
         current_O_D = None
-    return opponent_name, team_df, first_point_gender, first_point_line_type, line, point_data, us_score, them_score, point_gender, line_type, current_O_D
+
+    #dataframe of all points
+    if 'all_points' in ss:
+        all_points = ss.all_points
+    else:
+        all_points = pd.DataFrame()
+    return opponent_name, team_df, first_point_gender, first_point_line_type, line, point_data, us_score, them_score, point_gender, line_type, current_O_D, all_points
 
 #create default euphoria roster
 def make_euphoria_roster():
