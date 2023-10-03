@@ -5,7 +5,7 @@ st.set_page_config(
     page_title="Set Line",
     page_icon="📋")
 
-opponent_name, team_df, first_point_gender, first_point_line_type, line, point_data, us_score, them_score, point_gender, line_type, current_O_D, all_points = load_session_states(st.session_state)
+opponent_name, team_df, first_point_gender, first_point_line_type, half_score, line, point_data, us_score, them_score, point_gender, line_type, current_O_D, all_points, temp_gender, temp_line_type = load_session_states(st.session_state)
 
 
 if team_df is None:
@@ -20,6 +20,7 @@ else:
     st.markdown('Game-start stats:')
     first_point_gender = st.radio('Gender of first point:',['F','M'],horizontal = True)
     first_point_line_type = st.radio('First point:',['O','D'], horizontal = True)
+    half_score = st.number_input('Half taken at:',min_value=0, step=1,value=7)
     score_us = 0
     score_them = 0
 
@@ -32,6 +33,7 @@ else:
     score = 0
 
     point_gender = get_gender_of_point(first_point_gender,score)
+    line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
     #if you navigated away and want the line back, click load previous line
     load_previous_line = st.checkbox("load previous line")
     if load_previous_line == True:

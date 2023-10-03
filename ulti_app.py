@@ -5,6 +5,6 @@ st.set_page_config(
     page_icon="🥏",
 )
 
-st.header("Mixed Ultimate Frisbee stats tracker")
+st.header("Mixed ultimate frisbee stats tracker")
 st.markdown("...emphasis on the mixed")
 
