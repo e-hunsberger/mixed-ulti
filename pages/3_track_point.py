@@ -10,16 +10,13 @@ st.set_page_config(
 opponent_name, team_df, first_point_gender, first_point_line_type, half_score, line, point_data, us_score, them_score, point_gender, line_type, current_O_D, all_points, temp_gender, temp_line_type = load_session_states(st.session_state)
 
 #set score on sidebar
-#score, gender, offense/defense (us_score,them_score,point_gender,line_type)
-set_point_info(us_score,them_score,point_gender,line_type)
 
 # Only start tracking points if you have set a team and line
 if team_df is None:
     st.warning('Create team', icon="⚠️")
 elif (line is None) or (len(line)) != 7:
     st.warning('Line not 7 players')
-elif line_type is None:
-    st.warning("Remember to submit game start stats",icon="⚠️")
+
 else:
     # Define column names for the DataFrame
     col_names = ['action'] + list(line)
@@ -124,4 +121,6 @@ else:
                 st.rerun()
     
 
+    #score, gender, offense/defense (us_score,them_score,point_gender,line_type)
+    set_point_info(us_score,them_score,point_gender,line_type)
 

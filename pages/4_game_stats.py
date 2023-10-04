@@ -35,4 +35,4 @@ else:
     fig.update_layout(yaxis_title='Count',xaxis_title='Action',title='Actions by gender match')
     st.plotly_chart(fig,use_container_width=True)
 
-set_point_info(us_score,them_score,point_gender,line_type)
+    set_point_info(us_score,them_score,point_gender,line_type)
