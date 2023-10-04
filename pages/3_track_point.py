@@ -41,28 +41,8 @@ else:
             counter = 0
         else:
             counter = len(point_data)
-        new_row = [selected_action] + [False]*(idx) + [True] + [False]*(len(line)-idx-1) + [counter]
-        point_data = pd.concat([point_data,pd.DataFrame(data=[new_row], columns=col_names + ['action_counter'])],ignore_index=True)
-        if selected_action == 'score!':
-            #get gender and line type of the point before it changes
-            temp_gender = get_gender_of_point(first_point_gender,us_score + them_score)
-            temp_line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
-            st.session_state.temp_gender = temp_gender
-            st.session_state.temp_line_type = temp_line_type
-            us_score = us_score + 1
-            st.session_state.us_score = us_score
-            #recalculate next point gender 
-            point_gender = get_gender_of_point(first_point_gender,us_score+them_score)
-            #recalculate the next point line type
-            line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
-            #save the results
-            st.session_state.line_type = line_type
-            st.session_state.point_gender = point_gender
-            st.session_state.point_data = point_data
-            st.dataframe(point_data[col_names], hide_index=True)
-
-            #rerun immediately so score and gender update
-            st.rerun()
+        new_row = [selected_action] + [False]*(idx) + [True] + [False]*(len(line)-idx-1) + [counter] + [current_O_D]
+        point_data = pd.concat([point_data,pd.DataFrame(data=[new_row], columns=col_names + ['action_counter'] + ['current_O_D'])],ignore_index=True)
 
 
         #if action was 'throwaway' or 'turn' switch from offensive actions to defensive actions
@@ -85,7 +65,15 @@ else:
         st.dataframe(point_data[col_names], hide_index=True)
 
     if st.button('Undo last action'):
+        prev_action = point_data[len(point_data)-1:len(point_data)].action.values
         point_data = point_data[0:len(point_data)-1]
+        #set current O or D to the O or D of the previous point so the action options are current
+        #if the previous action was an offensive action, set current_O_D to O, else set to D
+        if prev_action in ["pick up disc","pass","bad look-off","turn","throwaway","⭐","assist","score!"]:
+            current_O_D = 'O'
+        else:
+            current_O_D = 'D'
+        st.session_state.current_O_D = current_O_D
         st.session_state.point_data = point_data
         st.rerun()
 
@@ -94,65 +82,13 @@ else:
     st.session_state.point_data = point_data
     st.session_state.line = line
 
-    if st.button('Opponent scored'):
-        #get gender and line type of the point before it changes
-        temp_gender = get_gender_of_point(first_point_gender,us_score + them_score)
-        temp_line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
-        st.session_state.temp_gender = temp_gender
-        st.session_state.temp_line_type = temp_line_type
-        them_score = them_score + 1
-        st.markdown(them_score)
-        st.session_state.them_score = them_score
-        #recalculate next point gender 
-        point_gender = get_gender_of_point(first_point_gender,us_score+them_score)
-        #recalculate the next point line type
-        line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
-
-        #save the results
-        st.session_state.line_type = line_type
-        st.session_state.point_gender = point_gender
-        #rerun immediately so score and gender update
-        st.rerun()
-
-    if st.button('Undo opponent score'):
-        #so get the gender and line_type of the PREVIOUS score to use for when saving the point
-        temp_gender = get_gender_of_point(first_point_gender,us_score + them_score)
-        temp_line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
-        st.session_state.temp_gender = temp_gender
-        st.session_state.temp_line_type = temp_line_type
-        them_score = them_score - 1
-        st.session_state.them_score = them_score
-        #recalculate next point gender 
-        point_gender = get_gender_of_point(first_point_gender,us_score+them_score)
-        #recalculate the next point line type
-        line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
-
-        #save the results
-        st.session_state.line_type = line_type
-        st.session_state.point_gender = point_gender
-        #rerun immediately so score and gender update
-        st.rerun()
-
-    #when ready, save the point (point will be saved as a dataframe concantenated with all points df)
-    #add extra columns for the opponent name, offensive vs defensive point, gender, us score, them score
-    #when the score is recorded, the line type and point gender are updated
-
+    opponent_scored_bool = st.checkbox('Opponent scored',value=False)
 
     with st.form('submit point'):
         if point_data is not None:
-
-            #if the last row contains a score, lower our score inputted (bc otherwise it will increase BEFORE saving)
-            #else assume the other team scored and lower their score
-            #'score' tracks the score of the game DURING the point
-            # if 'score' in point_data.action:
-            #     us_score = us_score - 1
-            # else:
-            #     them_score = them_score - 1
             point_data['us_score'] = us_score
             point_data['them_score'] = them_score
             point_data['score'] = us_score + them_score
-
-            st.markdown(them_score)
             point_data['opponent'] = opponent_name
             point_data['line_type'] = temp_line_type
             point_data['point_gender'] = temp_gender
@@ -168,8 +104,23 @@ else:
                 del st.session_state.point_data
                 point_data = None
                 st.success('Point submitted!')
+                #save session states and update score
+                if opponent_scored_bool == True:
+                    them_score = them_score + 1
+                    st.session_state.them_score = them_score 
+                else:
+                    us_score = us_score + 1
+                    st.session_state.us_score = us_score 
+                #recalculate next point gender 
+                point_gender = get_gender_of_point(first_point_gender,us_score+them_score)
+                #recalculate the next point line type
+                line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
+                #save the results
+                st.session_state.line_type = line_type
+                st.session_state.point_gender = point_gender
+
                 st.rerun()
     
 
-
+set_point_info(us_score,them_score,point_gender,line_type)
 
