@@ -90,11 +90,11 @@ else:
             point_data['them_score'] = them_score
             point_data['score'] = us_score + them_score
             point_data['opponent'] = opponent_name
-            point_data['line_type'] = temp_line_type
-            point_data['point_gender'] = temp_gender
+            point_data['line_type'] = line_type
+            point_data['point_gender'] = point_gender
 
             # Melt the DataFrame to combine selected columns into a new column
-            melted_df = pd.melt(point_data, id_vars=['action','line_type','point_gender','us_score','them_score','score','action_counter'], value_vars=list(line),
+            melted_df = pd.melt(point_data, id_vars=['action','line_type','point_gender','us_score','them_score','score','action_counter','current_O_D'], value_vars=list(line),
                         var_name='name', value_name='action_bool')
             
             all_points = pd.concat([all_points,melted_df])
@@ -122,5 +122,4 @@ else:
                 st.rerun()
     
 
-set_point_info(us_score,them_score,point_gender,line_type)
 

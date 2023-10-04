@@ -24,11 +24,17 @@ else:
 if opponent_name is not '':
     st.success("Opponent name set as: " + opponent_name)
 st.session_state['opponent_name'] = opponent_name
-first_point_gender = st.radio('Gender of first point:',['F','M'],horizontal = True)
-first_point_line_type = st.radio('First point:',['O','D'], horizontal = True)
-half_score = st.number_input('Half taken at:',min_value=0, step=1,value=7)
-#save game start stats as session state
-save_session_states(first_point_gender,first_point_line_type,us_score,them_score,half_score)
+
+
+
+with st.form('Game start options:'):
+    first_point_gender = st.radio('Gender of first point:',['F','M'],horizontal = True)
+    first_point_line_type = st.radio('First point:',['O','D'], horizontal = True)
+    half_score = st.number_input('Half taken at:',min_value=0, step=1,value=7)
+    if st.form_submit_button():
+    #save game start stats as session state
+        save_session_states(first_point_gender,first_point_line_type,us_score,them_score,half_score)
+        st.success('Submitted game start options (note: options will refresh when re-navigating to this page)')
 
 
 #set roster

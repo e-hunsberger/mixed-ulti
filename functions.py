@@ -64,11 +64,13 @@ def load_session_states(ss):
         line_type = first_point_line_type
     #initialise with O, but will switch later based on user selection
     else:
-        line_type = 'O' 
+        line_type = None 
 
     #keep track of whether on O or D on the current point
     if 'current_O_D' in ss:
         current_O_D = ss.current_O_D
+    elif line_type is None:
+        current_O_D = None
     elif line_type == 'O':
         current_O_D = 'O'
     elif line_type == 'D':
@@ -163,7 +165,9 @@ def get_gender_of_point(first_point_gender,score):
         }
     
     else:
-        score_gender_dict = {-1:'placeholder',0:'M',1:'F'
+        score_gender_dict = {-1:'placeholder',0:'M',1:'F',2:'M',3:'M',4:'F',5:'F',6:'M',7:'M',8:'F',9:'F',10:'M',11:'M',12:'F',13:'F',
+                             14:'M',15:'M',16:'F',17:'F',18:'M',19:'M',20:'F',21:'F',22:'M',23:'M',24:'F',25:'F',
+                             26:'M',27:'M',28:'F',29:'F',30:'M'
 
         }
 
@@ -185,7 +189,7 @@ def get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
     if first_point_line_type == 'D':
         #then even points will be offense, unless someone is at half, then it will switch
         if score % 2 == 0:
-            line_type == 'D'
+            line_type = 'D'
         else:
             line_type = 'O'
 
@@ -223,6 +227,7 @@ def download_checkpoint(all_points):
 
 def upload_from_checkpoint():
     st.markdown('Upload data from a previous checkpoint:')
+    st.warning('Feature not ready yet')
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
     
     if uploaded_file is not None:
@@ -231,6 +236,7 @@ def upload_from_checkpoint():
         #set all points
         st.session_state.all_points = pd.DataFrame(uploaded_file)
         #set gender
+        # point_gender = all_points[;0]
 
         #set line type
 
