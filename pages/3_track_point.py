@@ -18,6 +18,8 @@ if team_df is None:
     st.warning('Create team', icon="⚠️")
 elif (line is None) or (len(line)) != 7:
     st.warning('Line not 7 players')
+elif line_type is None:
+    st.warning("Remember to submit game start stats",icon="⚠️")
 else:
     # Define column names for the DataFrame
     col_names = ['action'] + list(line)

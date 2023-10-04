@@ -11,7 +11,7 @@ opponent_name, team_df, first_point_gender, first_point_line_type, half_score, l
 
 
 #game start stats
-st.markdown('Game-start stats:')
+st.markdown('Game-start settings:')
 
 if 'opponent_name' not in st.session_state:
     st.session_state.opponent_name = ''

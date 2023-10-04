@@ -11,6 +11,8 @@ st.title('Set line')
 
 if team_df is None:
     st.warning('Set roster and game information',icon="⚠️")
+elif line_type is None:
+    st.warning("Remember to submit game start settings",icon="⚠️")
 else:
 
 
@@ -68,4 +70,4 @@ else:
 
         #make plot of balance between O/D players, handlers/cutters and whether gender is correct
 
-set_point_info(us_score,them_score,point_gender,line_type)
+    set_point_info(us_score,them_score,point_gender,line_type)
