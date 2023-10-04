@@ -84,7 +84,7 @@ else:
     if (point_data is not None):
         st.dataframe(point_data[col_names], hide_index=True)
 
-    if st.button('Undo'):
+    if st.button('Undo last action'):
         point_data = point_data[0:len(point_data)-1]
         st.session_state.point_data = point_data
         st.rerun()

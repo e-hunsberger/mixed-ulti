@@ -7,32 +7,14 @@ st.set_page_config(
 
 opponent_name, team_df, first_point_gender, first_point_line_type, half_score, line, point_data, us_score, them_score, point_gender, line_type, current_O_D, all_points, temp_gender, temp_line_type = load_session_states(st.session_state)
 
+st.title('Set line')
 
 if team_df is None:
-    st.warning('Create team',icon="⚠️")
+    st.warning('Set roster and game information',icon="⚠️")
 else:
-    if opponent_name is None:
-        opponent_name = st.text_input("Opponent name:")
-
-    st.session_state.opponent_name = opponent_name
-
-    #game start stats
-    st.markdown('Game-start stats:')
-    first_point_gender = st.radio('Gender of first point:',['F','M'],horizontal = True)
-    first_point_line_type = st.radio('First point:',['O','D'], horizontal = True)
-    half_score = st.number_input('Half taken at:',min_value=0, step=1,value=7)
-    score_us = 0
-    score_them = 0
 
 
-    #save game start stats as session state
-    save_session_states(first_point_gender,first_point_line_type,score_us,score_them,line_type)
-
-    #temp:
-
-    score = 0
-
-    point_gender = get_gender_of_point(first_point_gender,score)
+    point_gender = get_gender_of_point(first_point_gender,us_score+them_score)
     line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
     #if you navigated away and want the line back, click load previous line
     load_previous_line = st.checkbox("load previous line")
@@ -42,6 +24,9 @@ else:
             st.warning("No previous line to select",icon="⚠️")
         else:
             line = list(st.session_state.line)
+            line = st.multiselect(
+                'Players for ' + line_type + ' point:',
+                team_df['name'],default=line)
             st.session_state.line = line
     else:
         #call line from scratch
@@ -82,3 +67,5 @@ else:
             st.success("line submitted!")
 
         #make plot of balance between O/D players, handlers/cutters and whether gender is correct
+
+set_point_info(us_score,them_score,point_gender,line_type)

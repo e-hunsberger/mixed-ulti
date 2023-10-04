@@ -19,7 +19,7 @@ def load_session_states(ss):
         first_point_gender = ss.first_point_gender
 
     else:
-        first_point_gender = None
+        first_point_gender = 'F'
 
     if 'first_point_line_type' in ss:
         first_point_line_type = ss.first_point_line_type
@@ -140,13 +140,13 @@ def make_euphoria_roster():
     return euphoria_roster 
 
 #save session states
-def save_session_states(first_point_gender,first_point_line_type,score_us,score_them,line_type):
+def save_session_states(first_point_gender,first_point_line_type,score_us,score_them,half_score):
 
     st.session_state.first_point_gender = first_point_gender
     st.session_state.first_point_line_type = first_point_line_type
     st.session_state.score_us = score_us
     st.session_state.score_them = score_them
-    st.session_state.line_type = line_type
+    st.session_state.half_score = half_score
 
 
 
@@ -154,7 +154,6 @@ def save_session_states(first_point_gender,first_point_line_type,score_us,score_
 
 
 def get_gender_of_point(first_point_gender,score):
-    st.markdown(score)
     #if the first point is F
     if first_point_gender == 'F':
         #create dict of gender for each total score
