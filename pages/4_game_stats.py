@@ -9,7 +9,10 @@ st.set_page_config(
 opponent_name, team_df, first_point_gender, first_point_line_type, half_score, line, point_data, us_score, them_score, point_gender, line_type, current_O_D, all_points, temp_gender, temp_line_type = load_session_states(st.session_state)
 
 st.title('Game stats')
-if 'team_df' in st.session_state:
+
+if len(all_points) == 0:
+    st.warning('No points to track',icon="⚠️")
+else:
 
     test = ['all actions'] + list(all_points.action.unique())
     plot_action = st.radio('Count actions by: ',test,horizontal=True)

@@ -14,10 +14,15 @@ opponent_name, team_df, first_point_gender, first_point_line_type, half_score, l
 st.markdown('Game-start stats:')
 
 if 'opponent_name' not in st.session_state:
+    st.session_state.opponent_name = ''
+if st.session_state.opponent_name is '':
     opponent_name = st.text_input("Opponent name:")
+
 else:
     opponent_name = st.text_input("Opponent name:",value=opponent_name,key='user')
 
+if opponent_name is not '':
+    st.success("Opponent name set as: " + opponent_name)
 st.session_state['opponent_name'] = opponent_name
 first_point_gender = st.radio('Gender of first point:',['F','M'],horizontal = True)
 first_point_line_type = st.radio('First point:',['O','D'], horizontal = True)

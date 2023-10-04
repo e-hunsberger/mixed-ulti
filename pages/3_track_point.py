@@ -27,7 +27,7 @@ else:
     st.title('Track point')
     #if currently offense, offer offensive actions, else offer defensive actions
     if current_O_D == 'O':
-        actions = ["pick up disc","pass","bad look-off","turn","throwaway","⭐","score!"]
+        actions = ["pick up disc","pass","bad look-off","turn","throwaway","⭐","assist","score!"]
     else: 
         actions = ["pull","generate turn","shutdown D","handblock/footblock","space coverage","⭐"]
 
@@ -144,16 +144,16 @@ else:
             #if the last row contains a score, lower our score inputted (bc otherwise it will increase BEFORE saving)
             #else assume the other team scored and lower their score
             #'score' tracks the score of the game DURING the point
-            if 'score' in point_data.action:
-                us_score = us_score - 1
-            else:
-                them_score = them_score - 1
+            # if 'score' in point_data.action:
+            #     us_score = us_score - 1
+            # else:
+            #     them_score = them_score - 1
             point_data['us_score'] = us_score
             point_data['them_score'] = them_score
             point_data['score'] = us_score + them_score
 
             st.markdown(them_score)
-            point_data['opponent'] = ''
+            point_data['opponent'] = opponent_name
             point_data['line_type'] = temp_line_type
             point_data['point_gender'] = temp_gender
 
@@ -172,9 +172,4 @@ else:
     
 
 
-    st.sidebar.markdown('--------------------------------------')
-    st.sidebar.title('Save progress')
-    # download_checkpoint(all_points)
-    # upload_from_checkpoint()
 
-        #try melting/pivoting to have names become a column called name, then groupby name and other attributes

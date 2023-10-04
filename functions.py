@@ -218,11 +218,21 @@ def save_line(line,team_df):
 
 #download all the point data in case of page refresh
 def download_checkpoint(all_points):
-    st.sidebar.markdown('Save progress by downloading a checkpoint:')
-    st.sidebar.download_button(label='Download checkpoint', data=all_points.to_csv(index=False), file_name='ulti_game_data.csv')
+    st.markdown('Save progress by downloading a checkpoint:')
+    st.download_button(label='Download checkpoint', data=all_points.to_csv(index=False), file_name='ulti_game_data.csv')
 
 def upload_from_checkpoint():
-    st.sidebar.markdown('Upload data from a previous checkpoint:')
-    uploaded_file = st.sidebar.file_uploader("Upload a CSV file", type=["csv"])
+    st.markdown('Upload data from a previous checkpoint:')
+    uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+    
     if uploaded_file is not None:
+        uploaded_file = pd.read_csv(uploaded_file)
+        st.dataframe(uploaded_file)
+        #set all points
         st.session_state.all_points = pd.DataFrame(uploaded_file)
+        #set gender
+
+        #set line type
+
+        #check if anything else needs to be recalled from the old data
+        uploaded_file = None
