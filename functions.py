@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 #load session states
 #line is a list, point data is a dataframe
 def load_session_states(ss):
@@ -110,6 +111,7 @@ def make_euphoria_roster():
         [
             {"name": "Aishah", "number": 00, "gender match":'female',"position":'handler',"line":'offense'},
             {"name": "Christine", "number": 00, "gender match":'female',"position":'handler',"line":'offense'},
+            {"name":"Corinne","number":00,"gender match":"female","position":"hybrid","line":"defense"},
             {"name": "Esther", "number": 00, "gender match":'female',"position":'handler',"line":'defense'},
             {"name": "Evelyn", "number": 00, "gender match":'female',"position":'cutter',"line":'offense'},
             {"name": "Gigi", "number": 00, "gender match":'female',"position":'handler',"line":'offense'},
@@ -129,6 +131,7 @@ def make_euphoria_roster():
             {"name": "Ethan", "number": 00, "gender match":'male',"position":'cutter',"line":'defense'},
             {"name": "Greg", "number": 00, "gender match":'male',"position":'handler',"line":'offense'},
             {"name": "Jackson", "number": 00, "gender match":'male',"position":'cutter',"line":'defense'},
+            {"name":"Jeff","number":00,"gender match":"male","position":"hybrid","line":"defense"},
             {"name": "Kesh", "number": 00, "gender match":'male',"position":'handler',"line":'offense'},
             {"name": "Luke", "number": 00, "gender match":'male',"position":'handler',"line":'defense'},
             {"name": "Mitch", "number": 00, "gender match":'male',"position":'hybrid',"line":'defense'},
@@ -137,9 +140,48 @@ def make_euphoria_roster():
         ]
     )
 
+    euphoria_roster.sort_values(by=['gender match','name'],ascending=[True,True],inplace=True)
+
 
 
     return euphoria_roster 
+
+
+#make Euphoric roster
+#create default euphoria roster
+def make_euphoric_roster():
+
+    euphoric_roster = pd.DataFrame(
+        [
+            {"name": "Kisa", "number": 00, "gender match":'female',"position":'hybrid',"line":'offense'},
+            {"name": "Therese", "number": 00, "gender match":'female',"position":'hybrid',"line":'offense'},
+            {"name": "Laura", "number": 00, "gender match":'female',"position":'hybrid',"line":'defense'},
+            {"name": "Kat", "number": 00, "gender match":'female',"position":'hybrid',"line":'defense'},
+            {"name": "Bel", "number": 00, "gender match":'female',"position":'hybrid',"line":'offense'},
+            {"name": "Sophie", "number": 00, "gender match":'female',"position":'hybrid',"line":'offense'},
+            {"name": "Genie", "number": 00, "gender match":'female',"position":'hybrid',"line":'defense'},
+            {"name": "Abbey", "number": 00, "gender match":'female',"position":'hybrid',"line":'defense'},
+            {"name": "Ines", "number": 00, "gender match":'female',"position":'hybrid',"line":'defense'},
+            {"name": "Neva", "number": 00, "gender match":'female',"position":'hybrid',"line":'offense'},
+
+            {"name": "Moose", "number": 00, "gender match":'male',"position":'hybrid',"line":'offense'},
+            {"name": "Kris", "number": 00, "gender match":'male',"position":'hybrid',"line":'offense'},
+            {"name": "Willem", "number": 00, "gender match":'male',"position":'hybrid',"line":'offense'},
+            {"name": "Troy", "number": 00, "gender match":'male',"position":'hybrid',"line":'defense'},
+            {"name": "Curtis", "number": 00, "gender match":'male',"position":'hybrid',"line":'defense'},
+            {"name": "Arun", "number": 00, "gender match":'male',"position":'hybrid',"line":'defense'},
+            {"name": "MattCK", "number": 00, "gender match":'male',"position":'hybrid',"line":'offense'},
+            {"name": "ChrisR", "number": 00, "gender match":'male',"position":'hybrid',"line":'offense'},
+            {"name": "Leo", "number": 00, "gender match":'male',"position":'hybrid',"line":'defense'},
+            {"name": "Ryan", "number": 00, "gender match":'male',"position":'hybrid',"line":'defense'},
+
+        ]
+    )
+
+
+    euphoric_roster.sort_values(by=['gender match','name'],ascending=[True,True],inplace=True)
+
+    return euphoric_roster 
 
 #save session states
 def save_session_states(first_point_gender,first_point_line_type,score_us,score_them,half_score):
@@ -176,29 +218,45 @@ def get_gender_of_point(first_point_gender,score):
     return point_gender
 
 #get whether the point is O or D
-def get_line_type_of_point(first_point_line_type,us_score,them_score,half_score):
-    score = us_score + them_score 
-    #BEFORE HALF
-    #if first point line type is F 
-    if first_point_line_type == 'O':
-        #then even points will be offense, unless someone is at half, then it will switch
-        if score % 2 == 0:
-            line_type = 'O'
-        else:
-            line_type = 'D'
-    if first_point_line_type == 'D':
-        #then even points will be offense, unless someone is at half, then it will switch
-        if score % 2 == 0:
-            line_type = 'D'
-        else:
-            line_type = 'O'
+def get_line_type_of_point(all_points,first_point_line_type,us_score,them_score,half_score):
+    line_type = None
+    if (all_points is not None) and (len(all_points )> 0):
 
+        last_score = np.max(all_points.score)
+        last_point = all_points[all_points.score == last_score]
+        if 'opponent score' in last_point.action.values:
+            st.markdown('here!')
+            line_type = 'O'
+        if 'score!' in last_point.action.values:
+            line_type = 'D'
+            st.markdown('here!')
     #if it's past half, reverse the line type
-    if (us_score > half_score) or (them_score > half_score):
-        if line_type == 'O':
+    elif ((us_score == half_score) or (them_score == half_score)) and ((them_score+us_score) < half_score*2):
+        if first_point_line_type == 'O':
             line_type == 'D'
-        if line_type == 'D':
+        if first_point_line_type == 'D':
             line_type == 'O'
+
+    else:
+        line_type = first_point_line_type
+
+    # #BEFORE HALF
+    # #if first point line type is F 
+    # if first_point_line_type == 'O':
+    #     #then even points will be offense, unless someone is at half, then it will switch
+    #     if score % 2 == 0:
+    #         line_type = 'O'
+    #     else:
+    #         line_type = 'D'
+    # if first_point_line_type == 'D':
+    #     #then even points will be offense, unless someone is at half, then it will switch
+    #     if score % 2 == 0:
+    #         line_type = 'D'
+    #     else:
+    #         line_type = 'O'
+
+
+
     return line_type 
 
 
@@ -227,18 +285,31 @@ def download_checkpoint(all_points):
 
 def upload_from_checkpoint():
     st.markdown('Upload data from a previous checkpoint:')
-    st.warning('Feature not ready yet')
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
     
     if uploaded_file is not None:
         uploaded_file = pd.read_csv(uploaded_file)
-        st.dataframe(uploaded_file)
         #set all points
-        st.session_state.all_points = pd.DataFrame(uploaded_file)
-        #set gender
-        # point_gender = all_points[;0]
+        all_points = pd.DataFrame(uploaded_file)
+        st.session_state.all_points = all_points
+        last_score = all_points.score.max()
+        last_point = all_points[all_points.score == last_score]
 
-        #set line type
+        #get all relecant data
+        point_gender = str(last_point.point_gender.mode().values[0])
+        line_type = str(last_point.line_type.mode().values[0])
+        us_score = int(last_point.us_score.mode().values[0])
+        them_score = int(last_point.them_score.mode().values[0])
+        score = int(last_point.score.mode().values[0])
+
+        #save as session states
+        st.session_state.point_gender = point_gender
+        st.session_state.line_type = line_type
+        st.session_state.us_score = us_score
+        st.session_state.them_score = them_score
+        st.session_state.score = score
+
+        set_point_info(us_score,them_score,point_gender,line_type)
 
         #check if anything else needs to be recalled from the old data
         uploaded_file = None

@@ -38,10 +38,15 @@ with st.form('Game start options:'):
 
 
 #set roster
-roster_options = st.radio("Roster options: ",['load Euphoria roster','load roster from csv'])
+roster_options = st.radio("Roster options: ",['load Euphoria roster','load Euphoric roster','load roster from csv'])
 
 if roster_options == 'load Euphoria roster':
     team_df = make_euphoria_roster()
+    st.dataframe(team_df,use_container_width=True)
+    st.session_state.team_df = team_df
+
+elif roster_options == 'load Euphoric roster':
+    team_df = make_euphoric_roster()
     st.dataframe(team_df,use_container_width=True)
     st.session_state.team_df = team_df
 

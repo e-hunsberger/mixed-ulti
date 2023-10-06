@@ -1,6 +1,7 @@
 import streamlit as st
 from functions import *
 import plotly.express as px
+import numpy as np
 st.set_page_config(
     page_title="Set Line",
     page_icon="📋")
@@ -17,7 +18,7 @@ else:
 
 
     point_gender = get_gender_of_point(first_point_gender,us_score+them_score)
-    line_type = get_line_type_of_point(first_point_line_type,us_score,them_score,half_score)
+    get_line_type_of_point(all_points,first_point_line_type,us_score,them_score,half_score)    
     #if you navigated away and want the line back, click load previous line
     load_previous_line = st.checkbox("load previous line")
     if load_previous_line == True:
@@ -26,6 +27,7 @@ else:
             st.warning("No previous line to select",icon="⚠️")
         else:
             line = list(st.session_state.line)
+            line = [item for item in line if item != 'other team']
             line = st.multiselect(
                 'Players for ' + line_type + ' point:',
                 team_df['name'],default=line)
@@ -65,7 +67,7 @@ else:
  
 
         if st.button("submit line"):
-            st.session_state.line = team_df[team_df.name.isin(line)].name.unique()
+            st.session_state.line = np.concatenate([team_df[team_df.name.isin(line)].name.unique(), np.array(['other team'])])# [team_df[team_df.name.isin(line)].name.unique()] + ['opponent']#.append(['opponent'])
             st.success("line submitted!")
 
         #make plot of balance between O/D players, handlers/cutters and whether gender is correct

@@ -12,7 +12,10 @@ st.title('Game stats')
 
 if len(all_points) == 0:
     st.warning('No points to track',icon="⚠️")
+elif team_df is None:
+    st.warning('Rember to (re)set team info',icon="⚠️")
 else:
+    st.dataframe(all_points)
 
     test = ['all actions'] + list(all_points.action.unique())
     plot_action = st.radio('Count actions by: ',test,horizontal=True)
