@@ -16,10 +16,9 @@ opponent_name, team_df, first_point_gender, first_point_line_type, half_score, l
 if team_df is None:
     st.warning('Create team', icon="⚠️")
 
-else:
-    if (line is None) or (len([item for item in line if item != 'other team']) != 7):
+elif (line is None) or (len([item for item in line if item != 'other team']) != 7):
         st.warning('Line not 7 players')
-
+else:
     # Define column names for the DataFrame
     col_names = ['action'] + list(line)
 
