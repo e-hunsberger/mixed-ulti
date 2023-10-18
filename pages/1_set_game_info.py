@@ -36,26 +36,42 @@ with st.form('Game start options:'):
         save_session_states(first_point_gender,first_point_line_type,us_score,them_score,half_score)
         st.success('Submitted game start options (note: options will refresh when re-navigating to this page)')
 
-
-#set roster
-roster_options = st.radio("Roster options: ",['load Euphoria roster','load Euphoric roster','load roster from csv'])
-
-if roster_options == 'load Euphoria roster':
-    team_df = make_euphoria_roster()
-    st.dataframe(team_df,use_container_width=True)
-    st.session_state.team_df = team_df
-
-elif roster_options == 'load Euphoric roster':
-    team_df = make_euphoric_roster()
-    st.dataframe(team_df,use_container_width=True)
-    st.session_state.team_df = team_df
-
-
+#initialise team_df 
+if 'team_df' not in st.session_state:
+    st.session_state.team_df = None
 else:
-    st.warning("Option to load roster from csv not yet available",icon="⚠️")
+    team_df = st.session_state.team_df
+if team_df is None:
+    #set roster
+    roster_options = st.radio("Roster options: ",['','load Euphoria roster','load Euphoric roster','load roster from csv'])
+
+    if roster_options == 'load Euphoria roster':
+        team_df = make_euphoria_roster()
+        st.dataframe(team_df,use_container_width=True)
+        st.session_state.team_df = team_df
+
+    elif roster_options == 'load Euphoric roster':
+        team_df = make_euphoric_roster()
+        st.dataframe(team_df,use_container_width=True)
+        st.session_state.team_df = team_df
+
+
+    elif roster_options == 'load roster from csv':
+        uploaded_file = st.file_uploader("Upload roster as csv (columns: name, number, gender match, position, line)", type=["csv"])
         
+        if uploaded_file is not None:
+            uploaded_file = pd.read_csv(uploaded_file)
+            #set all points
+            team_df = pd.DataFrame(uploaded_file)
+            st.session_state.team_df = team_df
 
+else: 
+    st.warning('Team roster has already been set. To reset, click the refresh roster button below.')       
 
+refresh_roster = st.button('Refresh roster')
+if refresh_roster == True:
+    st.session_state.team_df = None
+    st.rerun()
 
 
 
