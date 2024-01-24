@@ -82,8 +82,10 @@ def load_session_states(ss):
     #dataframe of all points
     if 'all_points' in ss:
         all_points = ss.all_points
+
     else:
         all_points = pd.DataFrame()
+
 
     #score that half is taken at
     if 'half_score' in ss:
@@ -201,14 +203,15 @@ def get_gender_of_point(first_point_gender,score):
     if first_point_gender == 'F':
         #create dict of gender for each total score
         score_gender_dict = {-1:'placeholder',
-            0:'F',1:'M',2:'F',3:'F',4:'M',5:'M',6:'F',7:'F',8:'M',9:'M',10:'F',11:'F',12:'M',13:'M',14:'F',15:'F',
-            16:'M',17:'M',18:'F',19:'F',20:'M',21:'M',22:'F',23:'F',24:'M',25:'M',26:'F',27:'F',28:'M',29:'M',30:'F'
+            0:'F',1:'M',2:'M',3:'F',4:'F',5:'M',6:'M',7:'F',8:'F',9:'M',10:'M',11:'F',12:'F',13:'M',14:'M',15:'F',
+            16:'F',17:'M',18:'M',19:'F',20:'F',21:'M',22:'M',23:'F',24:'F',25:'M',26:'M',27:'F',28:'F',29:'M',30:'M'
         }
     
     else:
-        score_gender_dict = {-1:'placeholder',0:'M',1:'F',2:'M',3:'M',4:'F',5:'F',6:'M',7:'M',8:'F',9:'F',10:'M',11:'M',12:'F',13:'F',
-                             14:'M',15:'M',16:'F',17:'F',18:'M',19:'M',20:'F',21:'F',22:'M',23:'M',24:'F',25:'F',
-                             26:'M',27:'M',28:'F',29:'F',30:'M'
+        score_gender_dict = {-1:'placeholder',0:'M',1:'F',2:'F',3:'M',4:'M',5:'F',6:'F',7:'M',8:'M',9:'F',10:'F',11:'M',
+                             12:'M',13:'F',
+                             14:'F',15:'M',16:'M',17:'F',18:'F',19:'M',20:'M',21:'F',22:'F',23:'M',24:'M',25:'F',
+                             26:'F',27:'M',28:'M',29:'F',30:'F'
 
         }
 
@@ -224,11 +227,9 @@ def get_line_type_of_point(all_points,first_point_line_type,us_score,them_score,
         last_score = np.max(all_points.score)
         last_point = all_points[all_points.score == last_score]
         if 'opponent score' in last_point.action.values:
-            st.markdown('here!')
             line_type = 'O'
         if 'score!' in last_point.action.values:
             line_type = 'D'
-            st.markdown('here!')
     #if it's past half, reverse the line type
     elif ((us_score == half_score) or (them_score == half_score)) and ((them_score+us_score) < half_score*2):
         if first_point_line_type == 'O':

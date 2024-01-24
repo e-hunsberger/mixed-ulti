@@ -43,18 +43,22 @@ else:
     team_df = st.session_state.team_df
 if team_df is None:
     #set roster
-    roster_options = st.radio("Roster options: ",['','load Euphoria roster','load Euphoric roster','load roster from csv'])
+    roster_options = st.radio("Roster options: ",['','load Euphoria roster','load Euphoric roster','load Manuka roster','load roster from csv'])
 
     if roster_options == 'load Euphoria roster':
         team_df = make_euphoria_roster()
         st.dataframe(team_df,use_container_width=True)
-        st.session_state.team_df = team_df
+        st.session_state.team_df = team_df.sort_values(by=['gender match','name'])
 
     elif roster_options == 'load Euphoric roster':
         team_df = make_euphoric_roster()
         st.dataframe(team_df,use_container_width=True)
-        st.session_state.team_df = team_df
+        st.session_state.team_df = team_df.sort_values(by=['gender match','name'])
 
+    elif roster_options == 'load Manuka roster':
+        team_df = pd.read_csv('C:\\Users\\ehuns\\OneDrive\\Documents\\Personal\\Ulti App\\manuka_roster.csv')
+        st.dataframe(team_df,use_container_width=True)
+        st.session_state.team_df = team_df.sort_values(by=['gender match','name'])
 
     elif roster_options == 'load roster from csv':
         uploaded_file = st.file_uploader("Upload roster as csv (columns: name, number, gender match, position, line)", type=["csv"])
@@ -63,6 +67,7 @@ if team_df is None:
             uploaded_file = pd.read_csv(uploaded_file)
             #set all points
             team_df = pd.DataFrame(uploaded_file)
+            team_df = team_df.sort_values(by=['gender match','name'])
             st.session_state.team_df = team_df
 
 else: 

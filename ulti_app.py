@@ -1,4 +1,5 @@
 import streamlit as st
+import warnings
 
 st.set_page_config(
     page_title="EqUlti App",

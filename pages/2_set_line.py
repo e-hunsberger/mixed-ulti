@@ -43,6 +43,13 @@ else:
         #create a warning if wrong gender is selected
         n_female = (team_df[(team_df.name.isin(line)) & (team_df['gender match'] == 'female')].name.nunique())
         n_male = (team_df[(team_df.name.isin(line)) & (team_df['gender match'] == 'male')].name.nunique())
+        #print number of each gender match needed
+        if point_gender == 'F':
+            st.markdown(str(4-n_female) + ' female-matching players still needed')
+            st.markdown(str(3-n_male) + ' male-matching players still needed')
+        if point_gender == 'M':
+            st.markdown(str(3-n_female) + ' female-matching players still needed')
+            st.markdown(str(4-n_male) + ' male-matching players still needed')
         if (n_female == 4) and (point_gender == 'M'):
             st.warning('Wrong gender. Too many female-matching players.',icon="⚠️")
         elif (n_female > 4):

@@ -134,7 +134,7 @@ else:
                 #recalculate next point gender 
                 point_gender = get_gender_of_point(first_point_gender,us_score+them_score)
                 #recalculate the next point line type
-                get_line_type_of_point(all_points,first_point_line_type,us_score,them_score,half_score) 
+                line_type = get_line_type_of_point(all_points,first_point_line_type,us_score,them_score,half_score) 
                 #save the results
                 st.session_state.line_type = line_type
                 st.session_state.point_gender = point_gender
