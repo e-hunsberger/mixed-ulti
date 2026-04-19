@@ -34,7 +34,7 @@ else:
 
     #gender plot
     actions_gender_df = pd.merge(all_points,team_df,on='name',how='outer').groupby(['gender match','action']).agg({'action_bool':'sum'}).reset_index()
-    fig = px.bar(actions_gender_df,x='action',y='action_bool',color='gender match')
+    fig = px.bar(actions_gender_df[~actions_gender_df.action.isin(['opponent score','opponent throwaway'])],x='action',y='action_bool',color='gender match')
     fig.update_layout(yaxis_title='Count',xaxis_title='Action',title='Actions by gender match')
     st.plotly_chart(fig,use_container_width=True)
 

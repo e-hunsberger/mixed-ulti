@@ -19,6 +19,7 @@ if team_df is None:
 elif (line is None) or (len([item for item in line if item != 'other team']) != 7):
         st.warning('Line not 7 players')
 else:
+
     # Define column names for the DataFrame
     col_names = ['action'] + list(line)
 
@@ -94,6 +95,14 @@ else:
             st.session_state.current_O_D = current_O_D
             st.session_state.point_data = point_data
             st.rerun()
+
+    if st.button('Reset line'):
+        #reset line and point data so that new line can be set
+        st.session_state.line = None
+        st.session_state.current_O_D = current_O_D
+        st.session_state.point_data = point_data
+
+        st.rerun()
 
 
     #save data

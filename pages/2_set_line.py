@@ -23,7 +23,7 @@ else:
     load_previous_line = st.checkbox("load previous line")
     if load_previous_line == True:
         #if there was no previous line, give a warning
-        if ('line' not in st.session_state):
+        if ('line' not in st.session_state) or line is None:
             st.warning("No previous line to select",icon="⚠️")
         else:
             line = list(st.session_state.line)
